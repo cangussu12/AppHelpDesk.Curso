@@ -1,12 +1,5 @@
 <?php
 
-session_start();
-$_SESSION['x'] = 'Oi, eu sou um valor de sessão!';
-print_r($_SESSION);
-echo '<hr/>';
-print_r($_SESSION['y']);
-
-
 //VARIAVEL QUE VERIFICA SE A AUTENTICAÇÃO FOI REALIZADA
 $usuario_autenticado = false;
 
