@@ -5,18 +5,39 @@
   //chamados
   $chamados = array();
 
-    $arquivo = fopen('arquivo.hd', 'r');
+  echo $_SESSION['perfil_id'];
 
-    // enquanto houver registros ( linhas ) a serem recuperados
-    while(!feof($arquivo)) { //testa pelo fim de um arquivo
-      //linhas
-      $registro = fgets($arquivo);
-      $chamados[] = $registro;
+  //abrir o arquivo.hd
+  $arquivo = fopen('arquivo.hd', 'r');
+
+  //enquanto houver registros (linhas) a serem recuperados
+  while(!feof($arquivo)) { //testa pelo fim de um arquivo
+    //linhas  
+    $registro = fgets($arquivo);
+
+    //explode dos detalhes do registro para verificar o id do usuário responsável pelo cadastro
+    $registro_detalhes = explode('#', $registro);
+
+    //(perfil id = 2) só vamos exibir o chamado, se ele foi criado pelo usuário
+    if($_SESSION['perfil_id'] == 2) {
+
+      //se usuário autenticado não for o usuário de abertura do chamado então não faz nada
+      if($_SESSION['id'] != $registro_detalhes[0]) {
+        continue; //não faz nada
+
+      } else {
+        $chamados[] = $registro; //adiciona o registro do arquivo ao array $chamados
+      }
+
+    } else {
+      $chamados[] = $registro; //adiciona o registro do arquivo ao array $chamados
     }
 
-      //fechar arquivo aberto
-      fclose($arquivo);
+  }
 
+  //fechar o arquivo aberto
+  fclose($arquivo);
+  
 ?>
 
 <html>
@@ -65,13 +86,6 @@
                 <?php
 
                 $chamados_dados = explode('#', $chamado);
-
-                if($_SESSION['perfil_id'] == 2) {
-                  // só vamos exibir o chamado se for criado pelo usuário.
-                  if($_SESSION['id'] != $chamados_dados[0]) {
-                    continue;
-                  }
-                } 
 
                 if(count($chamados_dados) < 3) {
                   continue;
